@@ -1,0 +1,21 @@
+{
+  "object_kind": "push",
+  "user_name": "Иван Иванов",
+  "ref": "refs/heads/main",
+  "project": {
+    "name": "MyProject",
+    "web_url": "https://gitlab.com/myorg/myproject"
+  },
+  "commits": [
+    {
+      "id": "abc123def456",
+      "message": "feat: добавлена новая функция\n\nПодробное описание",
+      "url": "https://gitlab.com/myorg/myproject/-/commit/abc123"
+    },
+    {
+      "id": "789xyz000aaa",
+      "message": "fix: исправлена ошибка в конфигурации",
+      "url": "https://gitlab.com/myorg/myproject/-/commit/789xyz"
+    }
+  ]
+}

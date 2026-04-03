@@ -1,0 +1,10 @@
+{
+  "object_kind": "tag_push",
+  "user_name": "Иван Иванов",
+  "ref": "refs/tags/v1.0.0",
+  "message": "Релиз версии 1.0.0 — стабильная версия",
+  "project": {
+    "name": "MyProject",
+    "web_url": "https://gitlab.com/myorg/myproject"
+  }
+}

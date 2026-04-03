@@ -1,0 +1,13 @@
+{
+  "object_kind": "build",
+  "build_status": "failed",
+  "build_name": "test:unit",
+  "build_id": 777,
+  "project_name": "MyProject",
+  "user": {
+    "name": "CI Runner"
+  },
+  "project": {
+    "web_url": "https://gitlab.com/myorg/myproject"
+  }
+}

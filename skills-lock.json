@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "discovery-interview": {
+      "source": "parcadei/Continuous-Claude-v3",
+      "sourceType": "github",
+      "computedHash": "934f3f1a7dd3a35e3a74f5716242ca2642a0efc6bee4f0c5f8b2233d7aefa9f3"
+    },
+    "git-commits": {
+      "source": "parcadei/Continuous-Claude-v3",
+      "sourceType": "github",
+      "computedHash": "269715dccf7767ca7ee94238eb402dfeaa66ce8d54bab79967fee517c38ca4c7"
+    },
+    "hooks": {
+      "source": "parcadei/Continuous-Claude-v3",
+      "sourceType": "github",
+      "computedHash": "b3b17749bbe6dfa40d3553b4f9ab810a6459d833494a78a0822446c6ee71b504"
+    },
+    "skill-development": {
+      "source": "parcadei/Continuous-Claude-v3",
+      "sourceType": "github",
+      "computedHash": "98172be168fafe7a11a66393f0c7b4d9d4be217fc6876134d1d21a46089c58ee"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "object_kind": "issue",
+  "user": {
+    "name": "Алексей Сидоров"
+  },
+  "project": {
+    "name": "MyProject"
+  },
+  "object_attributes": {
+    "action": "open",
+    "title": "Падает сервис при старте в продакшене",
+    "url": "https://gitlab.com/myorg/myproject/-/issues/15"
+  }
+}

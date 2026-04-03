@@ -1,0 +1,16 @@
+{
+  "commits": [
+    {
+      "message": "Test retry from Antigravity",
+      "url": "https://gitlab.fxserver.ru/test-project/-/commit/999999",
+      "id": "999999"
+    }
+  ],
+  "user_name": "Antigravity Test (Retry)",
+  "ref": "refs/heads/main",
+  "project": {
+    "web_url": "https://gitlab.fxserver.ru/test-project",
+    "name": "Test Project"
+  },
+  "object_kind": "push"
+}

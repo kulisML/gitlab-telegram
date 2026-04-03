@@ -1,0 +1,12 @@
+{
+  "object_kind": "pipeline",
+  "project": {
+    "name": "MyProject",
+    "web_url": "https://gitlab.com/myorg/myproject"
+  },
+  "object_attributes": {
+    "id": 999,
+    "status": "failed",
+    "ref": "main"
+  }
+}

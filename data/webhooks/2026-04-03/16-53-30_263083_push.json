@@ -1,0 +1,16 @@
+{
+  "commits": [
+    {
+      "message": "Test commit from Antigravity",
+      "url": "https://gitlab.fxserver.ru/test-project/-/commit/abcdef123456",
+      "id": "abcdef123456"
+    }
+  ],
+  "user_name": "Antigravity Test",
+  "ref": "refs/heads/main",
+  "project": {
+    "web_url": "https://gitlab.fxserver.ru/test-project",
+    "name": "Test Project"
+  },
+  "object_kind": "push"
+}

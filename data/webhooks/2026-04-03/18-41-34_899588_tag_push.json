@@ -1,0 +1,92 @@
+{
+  "object_kind": "tag_push",
+  "event_name": "tag_push",
+  "before": "a0508ef57c511e402731f84b7daf9f60834fd996",
+  "after": "52d1946ef397de9336230115112363c158cd8988",
+  "ref": "refs/tags/v1.0.0",
+  "ref_protected": false,
+  "checkout_sha": null,
+  "message": null,
+  "user_id": 17,
+  "user_name": "Кулисиди Кирилл",
+  "user_username": "kulissidi",
+  "user_email": null,
+  "user_avatar": "https://secure.gravatar.com/avatar/6798ffd0562a31ae13470a4d761fc33b924232cb6c90ba99597143fe530246c7?s=80&d=identicon",
+  "project_id": 49,
+  "project": {
+    "id": 49,
+    "name": "gitlab-notify-tg",
+    "description": null,
+    "web_url": "https://gitlab.fxserver.ru/bots/gitlab-notify-tg",
+    "avatar_url": null,
+    "git_ssh_url": "git@gitlab.fxserver.ru:bots/gitlab-notify-tg.git",
+    "git_http_url": "https://gitlab.fxserver.ru/bots/gitlab-notify-tg.git",
+    "namespace": "bots",
+    "visibility_level": 0,
+    "path_with_namespace": "bots/gitlab-notify-tg",
+    "default_branch": "main",
+    "ci_config_path": "",
+    "homepage": "https://gitlab.fxserver.ru/bots/gitlab-notify-tg",
+    "url": "git@gitlab.fxserver.ru:bots/gitlab-notify-tg.git",
+    "ssh_url": "git@gitlab.fxserver.ru:bots/gitlab-notify-tg.git",
+    "http_url": "https://gitlab.fxserver.ru/bots/gitlab-notify-tg.git"
+  },
+  "commits": [
+    {
+      "id": "a0508ef57c511e402731f84b7daf9f60834fd996",
+      "message": "Initial commit",
+      "title": "Initial commit",
+      "timestamp": "2026-03-23T18:02:44+00:00",
+      "url": "https://gitlab.fxserver.ru/bots/gitlab-notify-tg/-/commit/a0508ef57c511e402731f84b7daf9f60834fd996",
+      "author": {
+        "name": "fylnex",
+        "email": "gojorvover665@gmail.com"
+      },
+      "added": [
+        "README.md"
+      ],
+      "modified": [],
+      "removed": []
+    },
+    {
+      "id": "52d1946ef397de9336230115112363c158cd8988",
+      "message": "update: README.md to include detailed project description, features, setup instructions, and bot commands for GitLab notification Telegram bot.\n",
+      "title": "update: README.md to include detailed project description, features, setup...",
+      "timestamp": "2026-03-23T23:45:34+03:00",
+      "url": "https://gitlab.fxserver.ru/bots/gitlab-notify-tg/-/commit/52d1946ef397de9336230115112363c158cd8988",
+      "author": {
+        "name": "Fylnex",
+        "email": "gojorvover665@gmail.com"
+      },
+      "added": [
+        ".dockerignore",
+        ".env.example",
+        ".gitignore",
+        ".gitlab-ci.yml",
+        "Dockerfile",
+        "docker-compose.yml",
+        "package.json",
+        "src/bot.js",
+        "src/db.js",
+        "src/formatters.js",
+        "src/index.js",
+        "src/webhookHandler.js"
+      ],
+      "modified": [
+        "README.md"
+      ],
+      "removed": []
+    }
+  ],
+  "total_commits_count": 2,
+  "push_options": {},
+  "repository": {
+    "name": "gitlab-notify-tg",
+    "url": "git@gitlab.fxserver.ru:bots/gitlab-notify-tg.git",
+    "description": null,
+    "homepage": "https://gitlab.fxserver.ru/bots/gitlab-notify-tg",
+    "git_http_url": "https://gitlab.fxserver.ru/bots/gitlab-notify-tg.git",
+    "git_ssh_url": "git@gitlab.fxserver.ru:bots/gitlab-notify-tg.git",
+    "visibility_level": 0
+  }
+}

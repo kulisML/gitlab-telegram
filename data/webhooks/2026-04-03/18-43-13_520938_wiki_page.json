@@ -1,0 +1,14 @@
+{
+  "object_kind": "wiki_page",
+  "user": {
+    "name": "Дмитрий Козлов"
+  },
+  "project": {
+    "name": "MyProject"
+  },
+  "object_attributes": {
+    "action": "create",
+    "title": "Руководство по деплою",
+    "url": "https://gitlab.com/myorg/myproject/-/wikis/deploy-guide"
+  }
+}

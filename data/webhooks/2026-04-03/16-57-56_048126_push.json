@@ -1,0 +1,16 @@
+{
+  "commits": [
+    {
+      "message": "SUCCESSFUL TEST FROM ANTIGRAVITY!",
+      "url": "https://gitlab.fxserver.ru/final-project/-/commit/000000",
+      "id": "000000"
+    }
+  ],
+  "user_name": "Antigravity Test (Success!)",
+  "ref": "refs/heads/main",
+  "project": {
+    "web_url": "https://gitlab.fxserver.ru/final-project",
+    "name": "Final Test Project"
+  },
+  "object_kind": "push"
+}

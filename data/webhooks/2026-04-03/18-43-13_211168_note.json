@@ -1,0 +1,13 @@
+{
+  "object_kind": "note",
+  "user": {
+    "name": "Оля Зайцева"
+  },
+  "project": {
+    "name": "MyProject"
+  },
+  "object_attributes": {
+    "note": "Отличная работа! Код выглядит чисто, можно мержить. Только проверьте unit-тесты перед слиянием.",
+    "url": "https://gitlab.com/myorg/myproject/-/merge_requests/42#note_123"
+  }
+}

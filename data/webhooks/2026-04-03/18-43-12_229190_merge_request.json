@@ -1,0 +1,15 @@
+{
+  "object_kind": "merge_request",
+  "user": {
+    "name": "Мария Петрова"
+  },
+  "project": {
+    "name": "MyProject",
+    "web_url": "https://gitlab.com/myorg/myproject"
+  },
+  "object_attributes": {
+    "action": "open",
+    "title": "Добавить авторизацию через OAuth",
+    "url": "https://gitlab.com/myorg/myproject/-/merge_requests/42"
+  }
+}
