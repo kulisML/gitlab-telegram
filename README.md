@@ -1,278 +1,225 @@
-# GitLab → Telegram Notifier Bot 🚀
+<div align="center">
 
-Бот-посредник: принимает **Webhook-уведомления от GitLab** и пересылает их в **Telegram-чат**. Поддерживает пуши, мерж-реквесты, пайплайны, задачи, комментарии и многое другое.
+# 🤖 GitLab → Telegram Notifier Bot
 
----
+**Мост между GitLab и вашей командой в Telegram.**  
+Получайте мгновенные уведомления о пушах, пайплайнах и задачах прямо в чат.
 
-## 📋 Оглавление
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![aiogram](https://img.shields.io/badge/aiogram-3.x-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://aiogram.dev)
+[![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org)
 
-- [Что умеет бот](#что-умеет-бот)
-- [Структура проекта](#структура-проекта)
-- [Быстрый старт](#быстрый-старт)
-- [Настройка .env](#настройка-env)
-- [Запуск бота](#запуск-бота)
-- [Настройка GitLab Webhook](#настройка-gitlab-webhook)
-- [Открытие доступа через NGrok](#открытие-доступа-через-ngrok)
-- [Доступные тесты](#доступные-тесты)
-- [Как найти TELEGRAM_CHAT_ID](#как-найти-telegram_chat_id)
-- [Поддерживаемые события GitLab](#поддерживаемые-события-gitlab)
+</div>
 
 ---
 
-## Что умеет бот
+## ✨ Возможности
 
-| Событие GitLab | Уведомление в Telegram |
-|---|---|
-| Push (коммит в ветку) | 🚀 Кто, что, в какую ветку |
-| Tag Push (новый тег) | 🏷️ Новый тег/релиз |
-| Merge Request | 🆕/✅/❌ Открыт, смёрджен, закрыт |
-| Pipeline | 🏁/🚫 Статус CI/CD пайплайна |
-| Issue | 📕 Создана/закрыта задача |
-| Comment / Note | 💬 Новый комментарий |
-| Job (CI/CD Job) | ✅/❌ Успех/провал отдельной задачи |
-| Wiki Page | 📖 Создана/обновлена страница Wiki |
+- 🚀 **Мгновенные уведомления** — push, merge request, pipeline, issue, комментарии, wiki
+- 👤 **@Упоминания** — бот автоматически тегает нужного разработчика по GitLab username
+- 📊 **Ежедневный отчёт** — статистика команды в настроенное время
+- 🎛️ **Управление через Telegram** — команда `/tgbot` для настройки без редактирования файлов
+- 🗄️ **SQLite база** — история всех событий и аналитика
 
 ---
 
-## Структура проекта
+## 🏗️ Как это работает
 
-```
-gitlab&telegram/
-├── main.py               ← Точка входа, FastAPI-приложение
-├── requirements.txt      ← Зависимости Python
-├── .env                  ← ВАШ конфигурационный файл (не публиковать!)
-├── .env.example          ← Шаблон конфигурации
-├── ngrok.exe             ← NGrok (для пробрасывания туннеля)
-├── core/
-│   ├── config.py         ← Читает настройки из .env
-│   └── bot.py            ← Инициализация Telegram-бота (aiogram)
-├── utils/
-│   └── formatters.py     ← Форматирование сообщений под каждый тип события
-├── tests/
-│   └── test_webhook.py   ← Скрипт ручного тестирования всех событий
-├── data/
-│   └── webhooks/         ← Архив всех полученных JSON-данных (создаётся автоматически)
-└── docs/
-    └── setup.md          ← Дополнительная документация по настройке
+```mermaid
+sequenceDiagram
+    participant GL as GitLab
+    participant FA as FastAPI Server
+    participant DB as SQLite DB
+    participant TG as Telegram Bot
+
+    GL->>FA: POST /tgbotgit (webhook payload)
+    FA->>FA: Верификация X-Gitlab-Token
+    FA->>DB: Сохранить событие
+    FA->>DB: Найти @username по GitLab login
+    FA->>FA: Форматировать сообщение
+    FA->>TG: Отправить уведомление в чат
+
+    Note over TG,DB: Ежедневно в настроенное время
+    TG->>DB: Запросить статистику за день
+    TG->>TG: Сформировать отчёт
+    TG->>GL: Отправить сводку в чат
 ```
 
 ---
 
-## Быстрый старт
+## 📁 Структура проекта
 
-### 1. Требования
+```
+gitlab-telegram-bot/
+│
+├── main.py                    ← Точка входа. asyncio.gather(FastAPI + Bot + Scheduler)
+├── requirements.txt           ← Зависимости Python
+├── .env                       ← Конфигурация (не публиковать!)
+├── .env.example               ← Шаблон конфигурации
+├── bot.db                     ← SQLite база данных (создаётся автоматически)
+├── ngrok.exe                  ← NGrok для туннелирования (опционально)
+│
+├── core/                      ← Ядро приложения
+│   ├── config.py              ← Чтение настроек из .env
+│   ├── bot.py                 ← Инициализация aiogram Bot + Dispatcher
+│   ├── database.py            ← Вся работа с SQLite (users, events, settings)
+│   └── scheduler.py          ← APScheduler для ежедневных отчётов
+│
+├── bot_commands/              ← Telegram-команды
+│   └── handlers.py            ← /tgbot, inline-меню, FSM для диалогов
+│
+├── utils/                     ← Утилиты
+│   └── formatters.py          ← Форматирование событий в Telegram-сообщения
+│
+├── tests/                     ← Тестирование
+│   └── test_webhook.py        ← Ручной тест всех 8 типов событий
+│
+└── docs/                      ← Документация
+    ├── quickstart.md          ← Быстрый старт
+    ├── configuration.md       ← Справочник настроек
+    ├── events.md              ← Поддерживаемые события GitLab
+    ├── telegram-commands.md   ← Команды Telegram-бота
+    ├── deployment.md          ← Развёртывание на сервере
+    └── troubleshooting.md     ← Устранение неисправностей
+```
 
-- **Python 3.10+** — скачать с [python.org](https://www.python.org/downloads/)
-- **Telegram Bot Token** — создать через [@BotFather](https://t.me/BotFather)
-- **GitLab** — ваш репозиторий с правами на настройку Webhook
+---
 
-### 2. Установка зависимостей
+## ⚡ Быстрый старт
 
 ```bash
+# 1. Клонируйте репозиторий
+git clone https://github.com/YOUR/gitlab-telegram-bot.git
+cd gitlab-telegram-bot
+
+# 2. Установите зависимости
 pip install -r requirements.txt
-```
 
-### 3. Настройте `.env` файл
-
-Скопируйте шаблон:
-```bash
+# 3. Настройте .env
 cp .env.example .env
-```
+# Заполните TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, GITLAB_SECRET_TOKEN
 
-Откройте `.env` и заполните значения (см. раздел [Настройка .env](#настройка-env)).
-
----
-
-## Настройка .env
-
-Файл `.env` — главный файл конфигурации. **Никогда не публикуйте его в Git!**
-
-```env
-# ─────────────────────────────────────────────
-# TELEGRAM SETTINGS
-# ─────────────────────────────────────────────
-
-# Токен вашего Telegram-бота.
-# Получить: напишите @BotFather → /newbot → скопируйте токен
-TELEGRAM_BOT_TOKEN=1234567890:AAExampleTokenHere
-
-# ID чата/группы, куда бот будет слать уведомления.
-# Как узнать: см. раздел "Как найти TELEGRAM_CHAT_ID" ниже
-TELEGRAM_CHAT_ID=1196267761
-
-# ─────────────────────────────────────────────
-# GITLAB SETTINGS
-# ─────────────────────────────────────────────
-
-# Секретный токен для верификации запросов от GitLab.
-# Придумайте любую строку (напр. "MySecret123").
-# Этот же токен нужно указать в настройках Webhook в GitLab.
-GITLAB_SECRET_TOKEN=MySecret123
-
-# ─────────────────────────────────────────────
-# APP SETTINGS
-# ─────────────────────────────────────────────
-
-# Папка для хранения входящих JSON-данных (архив событий).
-DATA_DIR=data/webhooks
-
-# IP-адрес для прослушивания (0.0.0.0 = все интерфейсы).
-APP_HOST=0.0.0.0
-
-# Порт, на котором запускается бот.
-# 80 — стандартный HTTP-порт (нужны права администратора).
-# 8000 — альтернатива без прав администратора.
-APP_PORT=80
-```
-
-> **Примечание по порту:**
-> - Порт **80** — стандартный, GitLab будет слать запросы напрямую. Требует запуска от администратора.
-> - Порт **8000** — не требует прав, но нужен NGrok (или reverse proxy).
-
----
-
-## Запуск бота
-
-### Простой запуск (для разработки)
-
-```bash
+# 4. Запустите
 python main.py
 ```
 
-Бот запустится и начнёт принимать запросы. Нажмите `Ctrl+C` для остановки.
-
-### Запуск в фоне (Windows)
-
-```powershell
-Start-Process python -ArgumentList "main.py" -WindowStyle Minimized
-```
-
-### Запуск в фоне (Linux/macOS)
-
-```bash
-nohup python main.py > bot.log 2>&1 &
-```
+Подробнее: [📖 Руководство по быстрому старту](./docs/quickstart.md)
 
 ---
 
-## Настройка GitLab Webhook
+## 📬 Поддерживаемые события GitLab
 
-1. Зайдите в ваш репозиторий → **Settings** → **Webhooks**
-2. Нажмите **Add new webhook**
-3. Заполните поля:
+| Событие | Описание | Уведомление |
+|---|---|---|
+| `push` | Коммит в ветку | 🚀 Автор, ветка, список коммитов с файлами |
+| `tag_push` | Новый тег / релиз | 🏷️ Тег, автор, сообщение |
+| `merge_request` | Действие с MR | 🆕✅❌ Статус, ветки, инициатор |
+| `pipeline` | CI/CD пайплайн | 🏁🚫 Статус, ветка, время выполнения |
+| `issue` | Задача открыта/закрыта | 📕 Заголовок, описание |
+| `note` | Комментарий | 💬 Текст, к какому объекту |
+| `build` | Job CI/CD | ✅❌ Название задачи, время |
+| `wiki_page` | Страница Wiki | 📖 Заголовок, автор |
+
+Подробнее: [📖 Все события](./docs/events.md)
+
+---
+
+## 🎛️ Управление ботом
+
+Напишите `/tgbot` в Telegram-чате — откроется панель управления:
+
+| Кнопка | Действие |
+|---|---|
+| 📊 Статистика сейчас | Сводка за текущий день |
+| 📜 Последние события | Последние 10 событий GitLab |
+| 📅 Расписание | Изменить время ежедневного отчёта |
+| 🔔 Типы событий | Вкл/Выкл каждый тип уведомлений |
+| 👥 Участники команды | Список зарегистрированных пользователей |
+| 🔗 Мой GitLab | Привязать GitLab username → @упоминания |
+
+Подробнее: [📖 Команды бота](./docs/telegram-commands.md)
+
+---
+
+## ⚙️ Конфигурация
+
+Минимальный `.env`:
+```env
+TELEGRAM_BOT_TOKEN=1234567890:AAExampleToken
+TELEGRAM_CHAT_ID=1196267761
+GITLAB_SECRET_TOKEN=MySecret123
+APP_PORT=80
+```
+
+Подробнее: [📖 Справочник настроек](./docs/configuration.md)
+
+---
+
+## 🌐 GitLab Webhook
+
+В настройках вашего GitLab репозитория (`Settings → Webhooks`):
 
 | Поле | Значение |
 |---|---|
-| **URL** | `http://ВАШ_IP/tgbotgit` или NGrok-ссылка |
+| **URL** | `http://ВАШ_IP/tgbotgit` |
 | **Secret token** | Значение `GITLAB_SECRET_TOKEN` из `.env` |
-| **Trigger** | Выберите нужные события (Push, MR, Pipeline и т.д.) |
-| **SSL verification** | Отключите, если нет HTTPS |
-
-4. Нажмите **Add webhook**
-5. Нажмите **Test** → выберите тип события → уведомление придёт в Telegram
+| **SSL verification** | Отключить, если нет HTTPS |
 
 ---
 
-## Открытие доступа через NGrok
+## 🚀 Развёртывание на сервере
 
-Если сервер находится за NAT или firewall (или GitLab не может достучаться напрямую), используйте **NGrok**.
+| Вариант | Когда использовать |
+|---|---|
+| **systemd** | Linux-сервер с белым IP. Автозапуск и рестарт. |
+| **NGrok** | Нет белого IP или тестирование. Быстро. |
+| **Nginx proxy** | Уже есть Nginx, несколько сайтов на сервере. |
 
-### Шаг 1: Получите токен
-
-1. Зарегистрируйтесь на [ngrok.com](https://ngrok.com/)
-2. Скопируйте **Authtoken** в личном кабинете
-
-### Шаг 2: Настройте NGrok
-
-```bash
-.\ngrok.exe config add-authtoken ВАШ_ТОКЕН
-```
-
-### Шаг 3: Запустите туннель
-
-```bash
-.\ngrok.exe http 80
-```
-
-NGrok выдаст публичный URL вида `https://xxxx-xxxx.ngrok-free.app`.
-
-### Шаг 4: Укажите URL в GitLab
-
-В настройках Webhook установите URL:
-```
-https://xxxx-xxxx.ngrok-free.app/tgbotgit
-```
-
-> **Важно:** URL NGrok меняется при каждом перезапуске (если нет платного плана). После перезапуска нужно обновить URL в GitLab.
+Подробнее: [📖 Руководство по развёртыванию](./docs/deployment.md)
 
 ---
 
-## Доступные тесты
-
-Убедитесь, что бот запущен, затем выполните:
+## 🧪 Тестирование
 
 ```bash
 python tests/test_webhook.py
 ```
 
-Скрипт отправит **9 тестовых событий** (по одному на каждый поддерживаемый тип) и покажет результат. Все уведомления придут в Telegram.
+Результат: 9 тестовых сообщений придут в Telegram.
 
-### Тестирование отдельных событий через curl (Linux/macOS)
+Подробнее: [📖 Тестирование](./docs/testing.md)
 
-```bash
-# Тест Push события
-curl -X POST http://localhost:80/tgbotgit \
-  -H "Content-Type: application/json" \
-  -H "X-Gitlab-Token: MySecret123" \
-  -d '{"object_kind":"push","user_name":"Test","ref":"refs/heads/main","project":{"name":"Test","web_url":"http://example.com"},"commits":[]}'
+---
+
+## 🔧 Требования
+
+```
+Python     3.10+
+FastAPI    0.110.0
+uvicorn    0.27.1
+aiogram    3.4.1
+aiosqlite  0.20.0
+apscheduler 3.10.4
+python-dotenv 1.0.1
 ```
 
-### Тест через GitLab
-
-В **Settings → Webhooks → Test** вы можете выбрать любой тип события — GitLab сам отправит реальный payload.
-
 ---
 
-## Как найти TELEGRAM_CHAT_ID
+## 📚 Документация
 
-### Вариант 1: Личный чат с ботом
-
-1. Напишите вашему боту любое сообщение
-2. Откройте в браузере: `https://api.telegram.org/botВАШ_ТОКЕН/getUpdates`
-3. Найдите поле `"chat": {"id": 123456789}` — это и есть ваш Chat ID
-
-### Вариант 2: Группа/Канал
-
-1. Добавьте бота в группу
-2. Напишите в группе любое сообщение
-3. Откройте `https://api.telegram.org/botВАШ_ТОКЕН/getUpdates`
-4. Найдите `"chat": {"id": -100xxxxxxxxx}` (ID группы начинается с `-100`)
-
-### Вариант 3: Через @userinfobot
-
-Напишите боту [@userinfobot](https://t.me/userinfobot) — он пришлёт ваш личный `id`.
-
----
-
-## Поддерживаемые события GitLab
-
-| `object_kind` | Описание |
+| Раздел | Описание |
 |---|---|
-| `push` | Коммит в любую ветку |
-| `tag_push` | Создание нового тега |
-| `merge_request` | Действия с Merge Request (open/merge/close) |
-| `pipeline` | Завершение CI/CD пайплайна (success/failed) |
-| `issue` | Создание/закрытие задачи |
-| `note` | Комментарий (к MR, Issue, коммиту) |
-| `build` | Завершение отдельного CI/CD job |
-| `wiki_page` | Изменение страницы Wiki |
-
-Остальные типы событий игнорируются (но JSON сохраняется в `data/webhooks/`).
+| [Быстрый старт](./docs/quickstart.md) | Запустить за 5 минут |
+| [Конфигурация](./docs/configuration.md) | Все переменные окружения и настройки |
+| [События GitLab](./docs/events.md) | Форматы и примеры всех уведомлений |
+| [Команды бота](./docs/telegram-commands.md) | `/tgbot` и все пункты меню |
+| [Развёртывание](./docs/deployment.md) | systemd, NGrok, Nginx |
+| [Тестирование](./docs/testing.md) | Как прогнать тесты |
+| [Устранение неисправностей](./docs/troubleshooting.md) | Типичные ошибки и решения |
 
 ---
 
-## Архив событий
+## 📄 Лицензия
 
-Все входящие webhook-данные сохраняются в папку `data/webhooks/ГГГГ-ММ-ДД/` в формате JSON. Это удобно для отладки и аудита.
-
-Пример пути: `data/webhooks/2026-04-03/14-25-30_push.json`
+MIT — используйте, modifайте, распространяйте свободно.

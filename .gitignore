@@ -1,0 +1,38 @@
+# Secrets
+.env
+
+# Database
+bot.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Data / logs
+data/
+*.log
+bot.log
+
+# NGrok binary
+ngrok.exe
+ngrok
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Agents/AI tools
+.agents/
+.augment/
+skills-lock.json
